@@ -45,6 +45,7 @@ from kivy.compat import PY2
 from collections import deque
 from time import sleep
 from os.path import join
+from os.path import splitext
 from os import write, close, unlink, environ
 import threading
 
@@ -296,7 +297,8 @@ class LoaderBase(object):
         data = fd = _out_osfd = None
         try:
             _out_filename = ''
-            suffix = '.%s' % (filename.split('.')[-1])
+            _, ext = splitext(filename)
+            suffix =  '.%s' % ext if ext is not None else None
             _out_osfd, _out_filename = tempfile.mkstemp(
                 prefix='kivyloader', suffix=suffix)
 

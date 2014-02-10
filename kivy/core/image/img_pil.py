@@ -102,4 +102,4 @@ class ImageLoaderPIL(ImageLoaderBase):
 
 
 # register
-ImageLoader.register(ImageLoaderPIL)
+ImageLoader.register(ImageLoaderPIL, default=True)

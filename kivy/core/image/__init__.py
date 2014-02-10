@@ -247,6 +247,7 @@ class ImageLoaderBase(object):
 class ImageLoader(object):
 
     loaders = []
+    default_loader = None
 
     @staticmethod
     def zip_loader(filename, **kwargs):
@@ -301,8 +302,11 @@ class ImageLoader(object):
         return image
 
     @staticmethod
-    def register(defcls):
+    def register(defcls, default=False):
         ImageLoader.loaders.append(defcls)
+
+        if default:
+            ImageLoader.default_loader = defcls
 
     @staticmethod
     def load(filename, **kwargs):
@@ -371,7 +375,12 @@ class ImageLoader(object):
                 im = loader(filename, **kwargs)
                 break
             if im is None:
-                raise Exception('Unknown <%s> type, no loader found.' % ext)
+
+                # try default
+                if ImageLoader.default_loader is not None:
+                    im = ImageLoader.default_loader(filename, **kwargs)
+                else:
+                    raise Exception('Unknown <%s> type, no loader found.' % ext)
             return im
 
 
